@@ -1,0 +1,89 @@
+<?xml version='1.0' standalone='yes'?>
+<!DOCTYPE PLUGIN [
+<!ENTITY name      "smokesignal">
+<!ENTITY pkg       "smokesignal">
+<!ENTITY author    "Junker der Provinz">
+<!ENTITY version   "2.0.2">
+<!ENTITY launch    "Main">
+<!ENTITY gitURL    "https://raw.githubusercontent.com/junkerderprovinz/smokesignal/main">
+<!ENTITY pluginURL "&gitURL;/plugin/smokesignal.plg">
+<!-- The actual package is unchanged from the last real SmokeSignal release: this
+     stub only bumps the version + CHANGES so Unraid's normal update-check reaches
+     existing installs (raw.githubusercontent.com does NOT redirect for a renamed
+     repo, only the release-download CDN and the github.com web UI do — so a stub
+     under the ORIGINAL name is the only way an already-installed plugin's own
+     update-check can still see this notice). -->
+<!ENTITY pkgURL    "https://github.com/junkerderprovinz/firesquire/releases/download/v2.0.1/smokesignal-2.0.1.txz">
+<!ENTITY emhttp    "/usr/local/emhttp/plugins/&pkg;">
+<!ENTITY plgPath   "/boot/config/plugins/&pkg;">
+]>
+
+<PLUGIN name="&name;"
+        author="&author;"
+        version="&version;"
+        launch="&launch;"
+        pluginURL="&pluginURL;"
+        min="6.10.0"
+        support="https://github.com/junkerderprovinz/firesquire/issues">
+
+<ICON>
+/usr/local/emhttp/plugins/&pkg;/images/&pkg;.png
+</ICON>
+
+  <CHANGES>
+## 2.0.2
+🌐 **Translations**
+- **This plugin has been renamed to FireSquire.** Same pre-reboot GO / CAUTION / NO-GO
+  advisory, same engine, new medieval-flavored name to match the rest of the house.
+  This repo is now just a redirect stub and will not receive further updates. Please
+  uninstall SmokeSignal and install FireSquire instead:
+  https://github.com/junkerderprovinz/firesquire
+
+## 2.0.1
+🌐 **Translations**
+- **This plugin has been renamed to FireSquire.** Same pre-reboot GO / CAUTION / NO-GO
+  advisory, same engine, new medieval-flavored name to match the rest of the house. This
+  is the final release under the SmokeSignal name — it will not receive further updates.
+  Please uninstall SmokeSignal and install FireSquire instead:
+  https://github.com/junkerderprovinz/firesquire
+  </CHANGES>
+
+  <!-- Download the package from the GitHub release (the last real SmokeSignal
+       package — unchanged, still fully functional, only this notice is new) -->
+  <FILE Name="&plgPath;/&pkg;-&version;.txz">
+    <URL>&pkgURL;</URL>
+  </FILE>
+
+  <!-- Install -->
+  <FILE Run="/bin/bash">
+    <INLINE>
+      echo "Installing SmokeSignal &version; ..."
+      for p in /var/log/packages/&pkg;*; do
+        if [ -e "$p" ]; then removepkg "$(basename "$p")" 2>/dev/null; fi
+      done
+      rm -rf "&emhttp;"
+      installpkg "&plgPath;/&pkg;-&version;.txz"
+      chmod +x "&emhttp;/&pkg;-check.sh" 2>/dev/null
+      echo ""
+      echo "SmokeSignal has been renamed to FireSquire."
+      echo "This install still works, but please migrate:"
+      echo "https://github.com/junkerderprovinz/firesquire"
+    </INLINE>
+  </FILE>
+
+  <!-- Remove. MUST be a <FILE ... Method="remove"> block: Unraid's plugin manager
+       only runs <FILE> elements, so a bare <REMOVE> tag is silently IGNORED and the
+       cleanup never runs. MUST end with exit 0. -->
+  <FILE Run="/bin/bash" Method="remove">
+    <INLINE>
+      echo "Bye! (SmokeSignal is now FireSquire: https://github.com/junkerderprovinz/firesquire)"
+      pkg=$(ls /var/log/packages/ 2>/dev/null | grep -E "^&pkg;(-[^-]+-[^-]+-[^-]+)?$" | head -n1)
+      if [ -n "$pkg" ]; then removepkg "$pkg" 2>/dev/null; fi
+      removepkg "&pkg;" 2>/dev/null
+      rm -rf "&emhttp;"
+      rm -rf "&plgPath;"
+      exit 0
+    </INLINE>
+  </FILE>
+
+</PLUGIN>
