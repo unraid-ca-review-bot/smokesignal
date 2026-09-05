@@ -16,6 +16,7 @@
 <!ENTITY pkgURL    "https://github.com/junkerderprovinz/firesquire/releases/download/v2.0.1/smokesignal-2.0.1.txz">
 <!ENTITY emhttp    "/usr/local/emhttp/plugins/&pkg;">
 <!ENTITY plgPath   "/boot/config/plugins/&pkg;">
+<!ENTITY sha256 "e6186e44699976f00baa9b198b50cf1d39d6443b245447592c8372475dea2526">
 ]>
 
 <PLUGIN name="&name;"
@@ -52,6 +53,7 @@
        package — unchanged, still fully functional, only this notice is new) -->
   <FILE Name="&plgPath;/&pkg;-&version;.txz">
     <URL>&pkgURL;</URL>
+    <SHA256>&sha256;</SHA256>
   </FILE>
 
   <!-- Install -->
